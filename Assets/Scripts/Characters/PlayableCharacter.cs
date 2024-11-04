@@ -1,8 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Abstract class for playable characters in the game.
-/// </summary>
 public abstract class PlayableCharacter : MonoBehaviour, IDamagable
 {
     public HealthBar healthBar;
@@ -18,36 +16,89 @@ public abstract class PlayableCharacter : MonoBehaviour, IDamagable
     protected int currentHp;
 
     private Rigidbody2D playerRb;
+    public Animator animator;
+
+    private Vector2 input; // Store movement direction
+
+    public RuntimeAnimatorController animatorController; // Reference to the Animator Controller for this character
+    public int characterID; // Unique ID for each character
 
     void Start()
     {
         playerRb = GetComponentInParent<Rigidbody2D>();
         currentHp = maxHp;
         healthBar.SetMaxHealth(maxHp);
+
+        // Ensure Animator component is set
+        animator = GetComponent<Animator>();
+        if (animator == null)
+        {
+            Debug.LogError("Animator not found on PlayableCharacter.");
+        }
     }
+
     public void TakeDamage(int damagePoints)
     {
         currentHp = Mathf.Max(0, currentHp - damagePoints);
         healthBar.SetHealth(currentHp);
-        if (currentHp == 0) 
+
+        // Play damage reaction animation if it exists
+        if (animator != null)
+        {
+            animator.SetTrigger("TakeDamage");
+        }
+
+        if (currentHp == 0)
         {
             Die();
         }
     }
 
-    public void Die()
+    private void FixedUpdate()
     {
-        GetComponent<SpriteRenderer>().sprite = ghostSprite;
-    }
+      
+            input.x = Input.GetAxisRaw("Horizontal");
+            input.y = Input.GetAxisRaw("Vertical");
 
-    public void Movement()
+            float speed = input.magnitude;
+            animator.SetFloat("speed", speed);
+
+            if (speed == 0)
+            {
+                animator.SetBool("IsMoving", false);
+            }
+            else
+            {
+                animator.SetFloat("moveX", input.x);
+                animator.SetFloat("moveY", input.y);
+
+                animator.SetBool("IsMoving", true);
+
+                Movement();
+            }
+        }
+
+
+
+        public void Movement()
     {
         if (IsPlayerRbSet())
         {
-            float moveHorizontal = Input.GetAxis("Horizontal");
-            float moveVertical = Input.GetAxis("Vertical");
-            Vector2 direction = new Vector2(moveHorizontal, moveVertical).normalized;
-            playerRb.MovePosition(playerRb.position + direction * moveSpeed * Time.deltaTime);
+            // Move the character based on the input direction
+            Vector2 moveDirection = input.normalized;
+            playerRb.MovePosition(playerRb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
+        }
+    }
+
+    public void Die()
+    {
+        // Show ghost sprite on death
+        GetComponent<SpriteRenderer>().sprite = ghostSprite;
+
+        // Play death animation
+        if (animator != null)
+        {
+            animator.SetTrigger("Die");
         }
     }
 
@@ -58,7 +109,7 @@ public abstract class PlayableCharacter : MonoBehaviour, IDamagable
 
     public abstract void SpecialAbillity();
 
-    protected void ApplyDamage(IDamagable damagable) 
+    protected void ApplyDamage(IDamagable damagable)
     {
         damagable.TakeDamage(basicAttack);
     }

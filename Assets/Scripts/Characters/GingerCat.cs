@@ -4,19 +4,7 @@ using UnityEngine;
 
 public class GingerCat : PlayableCharacter
 {
-    public Animator animator;
-    public RuntimeAnimatorController animatorController;
-
-    private void Awake()
-    {
-        // Get the Animator component
-        animator = GetComponent<Animator>();
-        // Assign the character's specific Animator Controller to the Animator
-        animator.runtimeAnimatorController = animatorController;
-    }
-
-
-
+  
     public override void SpecialAbillity()
     {
         Trap trap = FindNearbyTrap();
