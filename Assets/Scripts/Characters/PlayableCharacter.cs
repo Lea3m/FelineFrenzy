@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 /// <summary>
 /// Abstract class for playable characters in the game.
@@ -28,6 +29,9 @@ public abstract class PlayableCharacter : MonoBehaviour, IDamagable
 
     private bool isMoving = false;
 
+    private bool isInvincible = false;
+
+
     void Awake()
     {
         animator = GetComponent<Animator>();
@@ -43,6 +47,7 @@ public abstract class PlayableCharacter : MonoBehaviour, IDamagable
 
     public void TakeDamage(int damagePoints)
     {
+        if (isInvincible) return;
         HurtSound();
         currentHp = Mathf.Max(0, currentHp - damagePoints);
         healthBar.SetHealth(currentHp);
@@ -95,6 +100,13 @@ public abstract class PlayableCharacter : MonoBehaviour, IDamagable
 
     public abstract void SpecialAbillity();
 
+    public IEnumerator ActivateInvincibility(float duration)
+    {
+        isInvincible = true;
+        yield return new WaitForSeconds(duration);
+        isInvincible = false;
+    }
+
     protected void ApplyDamage(IDamagable damagable) 
     {
         damagable.TakeDamage(basicAttack);
@@ -135,4 +147,5 @@ public abstract class PlayableCharacter : MonoBehaviour, IDamagable
         }
         return true;
     }
+
 }

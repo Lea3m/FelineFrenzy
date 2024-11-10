@@ -8,8 +8,7 @@ public class Player : Spawner<PlayableCharacter>
     public Animator animator;
     public LayerMask trapsLayer;
 
-    public AudioClip gameOverSound;
-    public AudioSource audioSource;
+    public GameManager gameManager;
 
     private void Awake()
     {
@@ -72,30 +71,12 @@ public class Player : Spawner<PlayableCharacter>
             PlayableCharacter next= GetNextSpawnable();
             if (!next.IsDead())
             {
+                StartCoroutine(next.ActivateInvincibility(1f));
                 Swap(next);
                 return;
             }
         }
-        RestartGame();
+        gameManager.RestartGame();
     }
 
-    private void RestartGame()
-    {
-        if (audioSource != null && gameOverSound != null)
-        {
-            audioSource.PlayOneShot(gameOverSound);
-        }
-
-        Debug.Log("All characters are dead! Restarting the game...");
-
-        // Reload the current scene
-        Invoke("ReloadScene", 3f);
-    }
-
-    private void ReloadScene()
-    {
-        // Reload the current scene
-        Scene currentScene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(currentScene.buildIndex);
-    }
 }
