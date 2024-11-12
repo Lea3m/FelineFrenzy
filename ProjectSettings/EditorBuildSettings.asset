@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
+    path: Assets/Scenes/Main Menu.unity
+    guid: e0f39384c0cd3b24aa79553010f2c254
+  - enabled: 1
     path: Assets/Scenes/Level1.unity
     guid: e0205c2cb0be288499ef000b048703fb
   - enabled: 1
@@ -17,4 +20,10 @@ EditorBuildSettings:
   - enabled: 1
     path: "Assets/Scenes/\u200F\u200F\u200F\u200FLevel3.unity"
     guid: 2cb3ffbe7ebc43c498ccf2509cfc2dbd
+  - enabled: 1
+    path: Assets/Scenes/Victory.unity
+    guid: aa29c31666ffefa4f9fedb497c744bd5
+  - enabled: 1
+    path: Assets/Scenes/Game Over.unity
+    guid: c5ef74ef002e62242aa066cb6dfe9fcd
   m_configObjects: {}

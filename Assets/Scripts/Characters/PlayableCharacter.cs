@@ -51,7 +51,7 @@ public abstract class PlayableCharacter : MonoBehaviour, IDamagable
         HurtSound();
         currentHp = Mathf.Max(0, currentHp - damagePoints);
         healthBar.SetHealth(currentHp);
-        if (currentHp == 0) 
+        if (currentHp == 0)
         {
             Die();
         }
@@ -107,7 +107,7 @@ public abstract class PlayableCharacter : MonoBehaviour, IDamagable
         isInvincible = false;
     }
 
-    protected void ApplyDamage(IDamagable damagable) 
+    protected void ApplyDamage(IDamagable damagable)
     {
         damagable.TakeDamage(basicAttack);
     }
